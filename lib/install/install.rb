@@ -8,7 +8,6 @@ end
 
 if Rails.root.join(".gitignore").exist?
   append_to_file(".gitignore", %(\n/app/assets/builds/*\n!/app/assets/builds/.keep\n))
-  append_to_file(".gitignore", %(\n/node_modules\n))
 end
 
 if (app_layout_path = Rails.root.join("app/views/layouts/application.html.erb")).exist?
@@ -26,14 +25,7 @@ unless (app_js_entrypoint_path = Rails.root.join("app/javascript/application.js"
   copy_file "#{__dir__}/application.js", app_js_entrypoint_path
 end
 
-unless Rails.root.join("package.json").exist?
-  say "Add default package.json"
-  copy_file "#{__dir__}/package.json", "package.json"
-end
-
-if Rails.root.join("Procfile.dev").exist?
-  append_to_file "Procfile.dev", "js: yarn build --watch\n"
-else
+unless Rails.root.join("Procfile.dev").exist?
   say "Add default Procfile.dev"
   copy_file "#{__dir__}/Procfile.dev", "Procfile.dev"
 
