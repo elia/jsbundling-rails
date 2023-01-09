@@ -1,0 +1,15 @@
+#!/usr/bin/env ruby
+
+root = "#{__dir__}/.."
+app_root = "#{root}/dummy-app"
+
+unless File.exist? "#{app_root}/bin/dev"
+  warn 'Creating the dummy-app app...'
+  Dir.chdir root do
+    system "#{root}/bin/dummy-app" or \
+      abort 'Automatic creation of the dummy-app app failed'
+  end
+end
+
+Dir.chdir app_root
+exec "#{app_root}/bin/dev", *ARGV

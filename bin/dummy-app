@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+
+set -e
+set -x
+
+# Stay away from the bundler env of the containing extension.
+function with_unbundled_env {
+  ruby -rbundler -e'Bundler.with_unbundled_env { system *ARGV }' -- "$@"
+}
+
+if [ -z "$JS_BUNDLER" ]; then
+  echo 'Please specify which JavaScript bundler you want to install '
+  echo 'via the JS_BUNDLER environment variable.'
+  echo ''
+  echo 'export JS_BUNDLER=esbuild # or any of [esbuild|opal|rollup|webpack]'
+  exit 1
+fi
+
+rm -rf ./dummy-app
+with_unbundled_env bundle exec rails new dummy-app --skip-git --skip-javascript "$@"
+
+if [ ! -d "dummy-app" ]; then
+  echo 'dummy-app rails application failed'
+  exit 1
+fi
+
+cd ./dummy-app
+with_unbundled_env bundle --version
+with_unbundled_env bundle add jsbundling-rails --path ..
+with_unbundled_env bundle exec rails javascript:install:$JS_BUNDLER
+

@@ -5,4 +5,6 @@ set -vx
 
 # We need `bundle add --path` support
 gem install bundler --version ">= 2.3.22" --conservative
+
 bundle update
+rm -rf dummy-app
