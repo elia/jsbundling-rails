@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -euo pipefail
+IFS=$'\n\t'
+set -vx
+
+# We need `bundle add --path` support
+gem install bundler --version ">= 2.3.22" --conservative
+bundle update
